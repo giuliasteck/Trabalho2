@@ -1,3 +1,3 @@
 
 main:
-	gcc -omain main.c imageprocessing.c -I./ -lfreeimage
+	gcc -omain main.c imageprocessing.c -I./ -lfreeimage -Wextra -lpthread 

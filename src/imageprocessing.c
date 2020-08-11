@@ -79,3 +79,4 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
 
   FreeImage_Save(FIF_JPEG, bitmapOut, nome_do_arquivo, JPEG_DEFAULT);
 }
+
