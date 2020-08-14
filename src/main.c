@@ -11,7 +11,7 @@
 void blur(imagem *img);
 
 
-double tempos[];
+double tempos[M];
 double soma_tempos;
 double media;
 

@@ -9,7 +9,7 @@
 
 /*definindo a função blur exponencial e variaveis*/
 void *blur(void *arg);
-double tempos[];
+double tempos[M];
 double soma_tempos;
 double media;
 
@@ -65,7 +65,7 @@ int main() {
 	media = soma_tempos/M;
 
 
-	printf("média tempo multithreads para M =%d : %f segundos.\n",M, secs);
+	printf("média de tempo multithreads para M = %d: %f segundos.\n",M, secs);
 
         return 0;
 
