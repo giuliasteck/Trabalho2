@@ -63,7 +63,7 @@ int main() {
 	waitpid(p2,NULL,0);
 	waitpid(p3,NULL,0);
 
-	/*salvando processos rodados pelos processes na imagem*/
+	/*salvando processos na imagem*/
 	memcpy(img.r, a1, sizeof(float)*img.height*img.width);
 	memcpy(img.g, a2, sizeof(float)*img.height*img.width);
 	memcpy(img.b, a3, sizeof(float)*img.height*img.width);
