@@ -5,11 +5,11 @@
 #include <pthread.h>
 #include <sys/time.h>
 
-#define M 100
+#define M 50
 
 /*definindo a função blur exponencial e variaveis*/
 void *blur(void *arg);
-double tempos[];
+double tempos[M];
 double soma_tempos;
 double media;
 
@@ -23,6 +23,7 @@ int main() {
 	/*iniciando o struct de tempo*/
 	struct timeval start, stop;
    	double secs = 0;
+<<<<<<< HEAD
 	/*iniciando a contagem do tempo*/
 	gettimeofday(&start, NULL);
 
@@ -49,6 +50,8 @@ int main() {
 	/*salvando a nova imagem*/
         salvar_imagem("cachorro-out-thread.jpg", &img);
         liberar_imagem(&img);
+=======
+>>>>>>> a3f6547867d7fd1ca5a11ae6db640ef6fa36592d
 	
 	for (int aux = 0 ; aux<M; aux++){
 		/*iniciando a contagem do tempo*/
@@ -84,15 +87,14 @@ int main() {
 		/*convertendo o tempo para segundos*/
 		secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
 		tempos[aux] = secs;
-		/*tirar print depois do gráficooooo*/
-		printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
+		/*tirar print depois do gráficooooo*/		
 		soma_tempos += tempos[aux];
 	}    
 
 	media = soma_tempos/M;
 
 
-	printf("tempo multithreads: %f segundos.\n", secs);
+	printf("média de tempo multithreads para M = %d: %f segundos.\n",M, secs);
 
         return 0;
 
