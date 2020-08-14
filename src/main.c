@@ -45,7 +45,7 @@ int main() {
 		printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
 		soma_tempos += tempos[aux];
 		}    
-		media = soma_tempos/M;
+	media = soma_tempos/M;
 	
 	printf("tempo da main simples: %f segundos.\n ", media);
 	
