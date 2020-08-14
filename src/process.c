@@ -1,4 +1,4 @@
-#include <imageprocessing.h>
+#include <src/imageprocessing.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@ int main() {
 
 		/*iniciando a imagem e sua leitura*/
 		imagem img;
-	        img = abrir_imagem_process("data/cachorro.jpg");
+	        img = abrir_imagem_process("src/data/cachorro.jpg");
 
 		int protection = PROT_READ | PROT_WRITE;
 		int visibility = MAP_SHARED | MAP_ANONYMOUS;
@@ -78,9 +78,9 @@ int main() {
     		secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
 		
 		tempos[aux] = secs;
-		soms_tempos+= tempos[aux];
+		soma_tempos+= tempos[aux];
 	}
-	media = soma_tempos/M
+	media = soma_tempos/M;
 	printf("média de tempo multiprocess para M = %d: %f segundos.\n",M, secs);
         return 0;
 }

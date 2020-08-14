@@ -3,17 +3,6 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-<<<<<<< HEAD
-#define M 100
-
-/*definindo a função blur exponencial e variáveis*/
-double tempos[];
-double soma_tempos;
-double media;
-
-/*definindo a função blur exponencial*/
-void blur(imagem *img);
-=======
 
 #define M 50
 
@@ -26,7 +15,7 @@ double tempos[M];
 double soma_tempos;
 double media;
 
->>>>>>> a3f6547867d7fd1ca5a11ae6db640ef6fa36592d
+
 
 int main() {
 	/*iniciando o struct de tempo*/
@@ -42,16 +31,10 @@ int main() {
 		imagem img;
 		img = abrir_imagem("src/data/cachorro.jpg");
 
-<<<<<<< HEAD
-	/*aplicando o filtro normalmente*/
-	blur(&img);
-=======
-		int i=0;
-		int j = 0;
+
 		/*aplicando o filtro normalmente*/
 		blur(&img);
 
->>>>>>> a3f6547867d7fd1ca5a11ae6db640ef6fa36592d
 
 		/*salvando a nova imagem*/
 		salvar_imagem("cachorro-out-main.jpg", &img);
@@ -62,11 +45,9 @@ int main() {
 
 		/*convertendo o tempo para segundos*/
         	secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
-		tempos[aux] = secs;
-		/*tirar print depois do gráficooooo*/
-		//printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
-		soma_tempos += tempos[aux];
-		}    
+		tempos[aux] = secs;	
+		soma_tempos += tempos[aux];	
+	}    
 	media = soma_tempos/M;
 	
 	printf("Média de tempo da main simples para M = %d: %f segundos.\n ",M, media);
