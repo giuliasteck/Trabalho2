@@ -3,37 +3,52 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-/*definindo a função blur exponencial*/
+#define M 100
+
+/*definindo a função blur exponencial e variáveis*/
 void blur(imagem *img, int i, int j);
+double tempos[];
+double soma_tempos;
+double media;
 
 int main() {
 	/*iniciando o struct de tempo*/
 	struct timeval start, stop;
    	double secs = 0;
-	/*iniciando a contagem do tempo*/
-	gettimeofday(&start, NULL);
+	
+	for (int aux = 0 ; aux<M; aux++){
 
-	/*iniciando a imagem e sua leitura*/
-	imagem img;
-	img = abrir_imagem("src/data/cachorro.jpg");
+		/*iniciando a contagem do tempo*/
+		gettimeofday(&start, NULL);
 
-	int i=0;
-	int j = 0;
-	/*aplicando o filtro normalmente*/
-	blur(&img,i,j);
+		/*iniciando a imagem e sua leitura*/
+		imagem img;
+		img = abrir_imagem("src/data/cachorro.jpg");
+
+		int i=0;
+		int j = 0;
+		/*aplicando o filtro normalmente*/
+		blur(&img,i,j);
 
 
-	/*salvando a nova imagem*/
-	salvar_imagem("cachorro-out-main.jpg", &img);
-	liberar_imagem(&img);
+		/*salvando a nova imagem*/
+		salvar_imagem("cachorro-out-main.jpg", &img);
+		liberar_imagem(&img);
 
-	/*fim da contagem de tempo*/
-	gettimeofday(&stop, NULL);
+		/*fim da contagem de tempo*/
+		gettimeofday(&stop, NULL);
 
-	/*convertendo o tempo para segundos*/
-    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
-    printf("tempo da main simples: %f segundos.\n ", secs);
-
+		/*convertendo o tempo para segundos*/
+        	secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+		tempos[aux] = secs;
+		/*tirar print depois do gráficooooo*/
+		printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
+		soma_tempos += tempos[aux];
+		}    
+		media = soma_tempos/M;
+	
+	printf("tempo da main simples: %f segundos.\n ", media);
+	
 
 return 0;
 }
