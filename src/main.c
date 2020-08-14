@@ -47,12 +47,12 @@ int main() {
         	secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
 		tempos[aux] = secs;
 		/*tirar print depois do gráficooooo*/
-		printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
+		//printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
 		soma_tempos += tempos[aux];
 		}    
 	media = soma_tempos/M;
 	
-	printf("tempo da main simples: %f segundos.\n ", media);
+	printf("Média de tempo da main simples para M = %d: %f segundos.\n ",M, media);
 	
 
 return 0;

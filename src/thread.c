@@ -58,15 +58,14 @@ int main() {
 		/*convertendo o tempo para segundos*/
 		secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
 		tempos[aux] = secs;
-		/*tirar print depois do gráficooooo*/
-		printf("tempo da %d main simples: %f segundos.\n ",aux, tempos[aux]);		
+		/*tirar print depois do gráficooooo*/		
 		soma_tempos += tempos[aux];
 	}    
 
 	media = soma_tempos/M;
 
 
-	printf("tempo multithreads: %f segundos.\n", secs);
+	printf("média tempo multithreads para M =%d : %f segundos.\n",M, secs);
 
         return 0;
 

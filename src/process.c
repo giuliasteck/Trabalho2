@@ -8,76 +8,97 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#define M 50
 
 /*definindo a função blur exponencial*/
 
 void *blur(float* matriz,float* arg, imagem*img);
 
+
+double tempos[];
+double soma_tempos;
+double media;
+
+
 int main() {
 	/*iniciando o struct de tempo*/
 	struct timeval start, stop;
    	double secs = 0;
-	/*iniciando a contagem do tempo*/
-	gettimeofday(&start, NULL);
 
-	/*iniciando a imagem e sua leitura*/
-	imagem img;
-        img = abrir_imagem("data/cachorro.jpg");
+	for (int aux = 0 ; aux<M; aux++){
 
-	int protection = PROT_READ | PROT_WRITE;
-	int visibility = MAP_SHARED | MAP_ANONYMOUS;
+		/*iniciando a contagem do tempo*/
+		gettimeofday(&start, NULL);
+	
+		/*iniciando a imagem e sua leitura*/
+		imagem img;
+	        img = abrir_imagem("src/data/cachorro.jpg");
+	
+		int protection = PROT_READ | PROT_WRITE;
+		int visibility = MAP_SHARED | MAP_ANONYMOUS;
+	
+		float *arg1 = img.r;
+		float *arg2 = img.g;
+		float *arg3 = img.b;
+	
+		/*memoria compartilhada entre os processos*/
+		float *a1 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, 	visibility,0,0);
+		float *a2 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, 	visibility,0,0);
+		float *a3 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
+	
+	
+		/*iniciando os processos, cada filho irá tratar de uma cor*/
+		pid_t p1, p2, p3;
+	
+		p1= fork();
+		if (p1==0){
+			blur(a1,arg1,&img);
+			exit(0);
+			printf("NAO SAI OTARIO");
+		}
+	
+		p2 = fork();
+		if (p2==0){
+			blur(a2,arg2,&img);	
+			exit(0);
+			printf("NAO SAI OTARIO");
+		}	
+	
+		p3 = fork();
+		if (p3==0){
+			blur(a3,arg3,&img);
+			exit(0);
+			printf("NAO SAI OTARIO");
+		}
+		//printf("tempo sou o processo pai do loop numero %d\n", aux);
+	
+		/*aguardando todos os processos terminarem*/
+		waitpid(p1,NULL,0);
+		waitpid(p2,NULL,0);
+		waitpid(p3,NULL,0);
+	
+		/*salvando processos na imagem*/
+		memcpy(img.r, a1, sizeof(float)*img.height*img.width);
+		memcpy(img.g, a2, sizeof(float)*img.height*img.width);
+		memcpy(img.b, a3, sizeof(float)*img.height*img.width);
+	
+		/*salvando a nova imagem*/
+	        salvar_imagem("cachorro-out-process.jpg", &img);
+	        liberar_imagem(&img);
+	
+		/*fim da contagem de tempo*/
+		gettimeofday(&stop, NULL);
+	
+		/*convertendo o tempo para segundos*/
+	    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - 	start.tv_sec);
+		tempos[aux] = secs;
+		/*tirar print depois do gráficooooo*/
+		//printf("tempo da %d multiprocessos: %f segundos.\n ",aux, tempos[aux]);		
+		soma_tempos += tempos[aux];
+	}    
 
-	float *arg1 = img.r;
-	float *arg2 = img.g;
-	float *arg3 = img.b;
-
-	/*memoria compartilhada entre os processos*/
-	float *a1 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-	float *a2 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-	float *a3 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-
-
-	/*iniciando os processos, cada filho irá tratar de uma cor*/
-	pid_t p1, p2, p3;
-
-	p1= fork();
-	if (p1==0){
-		blur(a1,arg1,&img);
-	exit(0);
-	}
-
-	p2 = fork();
-	if (p2==0){
-		blur(a2,arg2,&img);	
-	exit(0);
-	}	
-
-	p3 = fork();
-	if (p3==0){
-		blur(a3,arg3,&img);
-	exit(0);
-	}
-
-	/*aguardando todos os processos terminarem*/
-	waitpid(p1,NULL,0);
-	waitpid(p2,NULL,0);
-	waitpid(p3,NULL,0);
-
-	/*salvando processos na imagem*/
-	memcpy(img.r, a1, sizeof(float)*img.height*img.width);
-	memcpy(img.g, a2, sizeof(float)*img.height*img.width);
-	memcpy(img.b, a3, sizeof(float)*img.height*img.width);
-
-	/*salvando a nova imagem*/
-        salvar_imagem("cachorro-out-process.jpg", &img);
-        liberar_imagem(&img);
-
-	/*fim da contagem de tempo*/
-	gettimeofday(&stop, NULL);
-
-	/*convertendo o tempo para segundos*/
-    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
-    printf("tempo multiprocess: %f segundos.\n", secs);
+	media = soma_tempos/M;
+    printf("média de tempo multiprocess para M = %d: %f segundos.\n",M, secs);
 
         return 0;
 }

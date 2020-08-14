@@ -2,6 +2,7 @@ LINEAR_FLAGS=-lfreeimage -Wextra
 THREAD_FLAGS=-lfreeimage -lpthread -Wextra
 PROCESS_FLAGS=-lfreeimage -Wextra
 
+.PHONY: depend clean
 all: src/main.o src/thread.o src/process.o
 
 src/main.o: src/main.c
