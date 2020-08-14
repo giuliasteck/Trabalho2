@@ -1,22 +1,17 @@
-#include <imageprocessing.h>
+#include <src/imageprocessing.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
-<<<<<<< HEAD
 #define M 100
 
 /*definindo a função blur exponencial e variáveis*/
-void blur(imagem *img, int i, int j);
 double tempos[];
 double soma_tempos;
 double media;
-=======
-void blur(imagem *img);
 
 /*definindo a função blur exponencial*/
 void blur(imagem *img);
->>>>>>> ee5be34c4a7475703c7973970b2bf1c3c9b74478
 
 int main() {
 	/*iniciando o struct de tempo*/
@@ -25,27 +20,15 @@ int main() {
 	
 	for (int aux = 0 ; aux<M; aux++){
 
-<<<<<<< HEAD
 		/*iniciando a contagem do tempo*/
 		gettimeofday(&start, NULL);
 
 		/*iniciando a imagem e sua leitura*/
 		imagem img;
 		img = abrir_imagem("src/data/cachorro.jpg");
-=======
-	/*iniciando a imagem e sua leitura*/
-	imagem img;
-	img = abrir_imagem("data/cachorro.jpg");
 
 	/*aplicando o filtro normalmente*/
 	blur(&img);
->>>>>>> ee5be34c4a7475703c7973970b2bf1c3c9b74478
-
-		int i=0;
-		int j = 0;
-		/*aplicando o filtro normalmente*/
-		blur(&img,i,j);
-
 
 		/*salvando a nova imagem*/
 		salvar_imagem("cachorro-out-main.jpg", &img);

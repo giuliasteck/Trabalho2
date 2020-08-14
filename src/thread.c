@@ -1,4 +1,4 @@
-#include <imageprocessing.h>
+#include <src/imageprocessing.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,13 +23,11 @@ int main() {
 	/*iniciando o struct de tempo*/
 	struct timeval start, stop;
    	double secs = 0;
-<<<<<<< HEAD
-=======
 	/*iniciando a contagem do tempo*/
 	gettimeofday(&start, NULL);
 
 	/*iniciando a imagem e sua leitura*/
-	img = abrir_imagem("data/cachorro.jpg");
+	img = abrir_imagem("src/data/cachorro.jpg");
 
 	pthread_t worker1, worker2, worker3;
 	void *a1 = malloc(sizeof(float*)); 
@@ -51,7 +49,6 @@ int main() {
 	/*salvando a nova imagem*/
         salvar_imagem("cachorro-out-thread.jpg", &img);
         liberar_imagem(&img);
->>>>>>> ee5be34c4a7475703c7973970b2bf1c3c9b74478
 	
 	for (int aux = 0 ; aux<M; aux++){
 		/*iniciando a contagem do tempo*/

@@ -22,7 +22,7 @@ int main() {
 
 	/*iniciando a imagem e sua leitura*/
 	imagem img;
-        img = abrir_imagem("data/cachorro.jpg");
+        img = abrir_imagem_process("data/cachorro.jpg");
 
 	int protection = PROT_READ | PROT_WRITE;
 	int visibility = MAP_SHARED | MAP_ANONYMOUS;
@@ -32,10 +32,7 @@ int main() {
 	float *arg3 = img.b;
 
 	/*memoria compartilhada entre os processos*/
-	float *a1 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-	float *a2 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-	float *a3 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, protection, visibility,0,0);
-
+	float *a1 = (float*)mmap(NULL, sizeof(float)*img.height*img.width, protection, visibility,0,0);
 
 	/*iniciando os processos, cada filho irá tratar de uma cor*/
 	pid_t p1, p2, p3;
@@ -48,13 +45,13 @@ int main() {
 
 	p2 = fork();
 	if (p2==0){
-		blur(a2,arg2,&img);	
+		blur(a1,arg2,&img);	
 	exit(0);
 	}	
 
 	p3 = fork();
 	if (p3==0){
-		blur(a3,arg3,&img);
+		blur(a1,arg3,&img);
 	exit(0);
 	}
 
@@ -63,14 +60,9 @@ int main() {
 	waitpid(p2,NULL,0);
 	waitpid(p3,NULL,0);
 
-	/*salvando processos na imagem*/
-	memcpy(img.r, a1, sizeof(float)*img.height*img.width);
-	memcpy(img.g, a2, sizeof(float)*img.height*img.width);
-	memcpy(img.b, a3, sizeof(float)*img.height*img.width);
-
 	/*salvando a nova imagem*/
         salvar_imagem("cachorro-out-process.jpg", &img);
-        liberar_imagem(&img);
+        liberar_imagem_process(&img);
 
 	/*fim da contagem de tempo*/
 	gettimeofday(&stop, NULL);
