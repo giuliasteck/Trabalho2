@@ -3,15 +3,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
+#include <sys/time.h>
 
+
+/*definindo a função blur exponencial*/
 void *blur(void *arg);
 
+/*definindo as threads*/
 pthread_t worker1, worker2, worker3;
 
 imagem img;
 
 int main() {
+	/*iniciando o struct de tempo*/
+	struct timeval start, stop;
+   	double secs = 0;
+	/*iniciando a contagem do tempo*/
+	gettimeofday(&start, NULL);
+
+	/*iniciando a imagem e sua leitura*/
 	img = abrir_imagem("data/cachorro.jpg");
 
 	pthread_t worker1, worker2, worker3;
@@ -22,6 +32,7 @@ int main() {
 	void *a3 = malloc(sizeof(float*));
 	a3 = img.b;
 
+	/*Criando as threads, cada uma irá tratar uma cor*/
 	pthread_create(&(worker1), NULL, blur, a1);
 	pthread_create(&(worker2), NULL, blur, a2);
 	pthread_create(&(worker3), NULL, blur, a3);
@@ -30,9 +41,19 @@ int main() {
 	pthread_join(worker2, NULL);
 	pthread_join(worker3, NULL);
 
-        salvar_imagem("cachorro-thread.jpg", &img);
+	/*salvando a nova imagem*/
+        salvar_imagem("cachorro-out-thread.jpg", &img);
         liberar_imagem(&img);
+	
+	/*Fim da contagem de tempo*/
+	gettimeofday(&stop, NULL);
+
+	/*convertendo o tempo para segundos*/
+	secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+	printf("tempo multithreads: %f segundos.\n", secs);
+
         return 0;
+
 }
 
 
@@ -40,8 +61,8 @@ void *blur(void *arg){
 	float alpha = 0.98;
 	float* matriz = malloc(sizeof(float)*img.height*img.width);
 	memcpy(matriz, arg, (sizeof(float)*img.height*img.width));
-        for (int i = 0; i<(img.width); i++){
-                for (int j =0; j<(img.height); j++){
+        for (int i = 0; (unsigned int)i<(img.width); i++){
+                for (int j =0; (unsigned int) j<(img.height); j++){
                         if (i!=0) {
                                matriz[j*img.width + i] = (1-alpha)*matriz[j*img.width + i] +(alpha)*matriz[j*img.width + i -1];
                         }

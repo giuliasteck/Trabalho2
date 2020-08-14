@@ -64,8 +64,8 @@ void salvar_imagem(char *nome_do_arquivo, imagem *I) {
   printf("Salvando imagem %d por %d...\n", I->width, I->height);
   bitmapOut = FreeImage_Allocate(I->width, I->height, 24, 0, 0, 0);
 
-   for (int i=0; i<I->width; i++) {
-     for (int j=0; j<I->height; j++) {
+   for (int i=0;(unsigned int) i<I->width; i++) {
+     for (int j=0;(unsigned int) j<I->height; j++) {
       int idx;
 
       idx = i + (j*I->width);
