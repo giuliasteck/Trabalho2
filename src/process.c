@@ -1,4 +1,4 @@
-#include <imageprocessing.h>
+#include <src/imageprocessing.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -9,8 +9,12 @@
 void *blur(float *arg, float* matriz, imagem*img);
 
 int main() {
+	struct timeval start, stop;
+   	double secs = 0;
+
+	gettimeofday(&start, NULL);
 	imagem img;
-        img = abrir_imagem("data/cachorro.jpg");
+        img = abrir_imagem("src/data/cachorro.jpg");
 
 	float *matriz1 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANON,0,0);
 	float *matriz2 = (float*)mmap(NULL, sizeof(float)*img.width*img.height, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANON,0,0);
@@ -38,6 +42,13 @@ int main() {
 
         salvar_imagem("cachorro-out-process.jpg", &img);
         liberar_imagem(&img);
+
+
+	gettimeofday(&stop, NULL);
+
+    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+    printf("time taken multiprocess: %f\n", secs);
+
         return 0;
 }
 

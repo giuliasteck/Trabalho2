@@ -1,9 +1,9 @@
-#include <imageprocessing.h>
+#include <src/imageprocessing.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
+#include <sys/time.h>
 
 void *blur(void *arg);
 
@@ -12,7 +12,12 @@ pthread_t worker1, worker2, worker3;
 imagem img;
 
 int main() {
-	img = abrir_imagem("data/cachorro.jpg");
+	struct timeval start, stop;
+    	double secs = 0;
+
+        gettimeofday(&start, NULL);
+
+	img = abrir_imagem("src/data/cachorro.jpg");
 
 	pthread_t worker1, worker2, worker3;
 	void *a1 = malloc(sizeof(float*)); 
@@ -30,9 +35,16 @@ int main() {
 	pthread_join(worker2, NULL);
 	pthread_join(worker3, NULL);
 
-        salvar_imagem("cachorro-thread.jpg", &img);
+        salvar_imagem("cachorro-out-thread.jpg", &img);
         liberar_imagem(&img);
+
+	gettimeofday(&stop, NULL);
+
+    secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
+    printf("time taken multithread: %f\n", secs);
+
         return 0;
+
 }
 
 
@@ -40,8 +52,8 @@ void *blur(void *arg){
 	float alpha = 0.98;
 	float* matriz = malloc(sizeof(float)*img.height*img.width);
 	memcpy(matriz, arg, (sizeof(float)*img.height*img.width));
-        for (int i = 0; i<(img.width); i++){
-                for (int j =0; j<(img.height); j++){
+        for (int i = 0; (unsigned int)i<(img.width); i++){
+                for (int j =0; (unsigned int) j<(img.height); j++){
                         if (i!=0) {
                                matriz[j*img.width + i] = (1-alpha)*matriz[j*img.width + i] +(alpha)*matriz[j*img.width + i -1];
                         }
